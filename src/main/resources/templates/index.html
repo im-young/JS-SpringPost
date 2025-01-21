@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 메인 페이지</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- 네비게이션 바 -->
+<div th:replace="~{navi :: navi}"></div>
+<!-- th:replace=       :  replace라고 지정 되어 있는것을 프래크 넌트로 바꿔줌
+	 "~{navi :: navi}" : -{파일이름(navi.thml) :: 프래그넌트의 이름(navi.html안에 있는 프레그넌트(th:fragment="navi")
+	 	 					-> 프래그넌트로 지정한 내부태그로 변경됨 <nav th:fragment="navi"></nav> 
+-->
+
+<!-- 페이지 내용 -->
+<div class="container my-5">
+    <h1 class="text-center">게시판 V1 메인 페이지</h1>
+    <p class="text-center mt-4">환영합니다! 게시판 V1의 메인 페이지입니다.</p>
+</div>
+
+<!-- Bootstrap JS 및 의존성 스크립트 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
