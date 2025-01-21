@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.example.post.model.Post;
+import com.example.post.model.posts.Post;
 //# 3.
 @Repository // 이거 등록 안하면 bin으로 등록 안하기 때문에 쓸수 없음
 public class PostRepositoryImpl implements PostRepository {

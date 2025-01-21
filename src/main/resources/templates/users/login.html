@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- 네비게이션 바 -->
+<div th:replace="~{navi :: navi}"></div>
+
+<div class="container my-5">
+    <h2>로그인</h2>
+
+    <!-- 로그인 폼 -->
+    <form action="/users/login" method="post" >
+        <div class="mb-3">
+            <label for="username" class="form-label">사용자명</label>
+            <input type="text" class="form-control" name="username" required>
+        </div>
+        <div class="alert alert-danger"></div>
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" name = "password" required>
+        </div>
+        <div class="alert alert-danger"></div>
+        <button type="submit" class="btn btn-primary">로그인</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS 및 의존성 스크립트 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

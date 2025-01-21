@@ -1,4 +1,4 @@
-package com.example.post.model;
+package com.example.post.model.posts;
 
 import java.time.LocalDateTime;
 

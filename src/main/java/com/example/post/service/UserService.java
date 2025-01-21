@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.post.model.User;
+import com.example.post.model.users.User;
 import com.example.post.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -55,4 +55,8 @@ public class UserService {
 		 return users;
 	 }
 
+	 // username으로 회원정보 조회
+	 public User getUserbyUsername(String username) {
+		 return userRepository.findByUsername(username);
+	 }
 }

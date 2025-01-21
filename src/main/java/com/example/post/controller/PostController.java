@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.post.model.Post;
+import com.example.post.model.posts.Post;
 import com.example.post.service.PostService;
 
 import lombok.RequiredArgsConstructor;

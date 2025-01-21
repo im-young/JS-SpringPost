@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.post.model.User;
+import com.example.post.model.users.User;
 import com.example.post.repository.UserRepository;
 import com.example.post.service.UserService;
 
@@ -35,11 +35,10 @@ public class userController {
 		private final UserService userService; // 이 때 무조건 final 붙여야함
 		
  // 회원가입 페이지 요청 처리
-	@GetMapping("register")
+	@GetMapping("users/register")
 	public String register() {
 		
-		return "register";
-		
+		return "users/register";
 	}
 // 회원가입 요청 처리
 	//방법1
@@ -56,7 +55,7 @@ public class userController {
 //		return "register_success";
 //	}
 	//방법2.class로 불러오기
-	@PostMapping(path="register") // register_v3에서 register로 변경
+	@PostMapping(path="users/register") // register_v3에서 register로 변경
 	public String regiter_v3_class(
 			@ModelAttribute User user) {
 		
@@ -64,37 +63,59 @@ public class userController {
 //		log.info("name:{}",user.getName());
 		// 
 		User registedUser = userService.registerUser(user);
-//		log.info("registedUser:{}", registedUser); // 확인용
+		log.info("registedUser:{}", registedUser); // 확인용
 
 		
-		return "register_success";
+		return "redirect:/"; //index페이지로 이동
 	}
 	
 	
 		
 // =================== Day 0121 = 세션(로그인) ===============================
 // 로그인 페이지 이동
-	
-		// 로그인
-		@GetMapping("login")
+	 // 회원가입 페이지 요청 처리
+		@GetMapping("users/login")
+		public String login() {
+			
+			return "users/login";
+		}
+//		// 로그인
+		@PostMapping("users/login")
 		public String login(
-		@RequestParam(name = "username") String username,
-		@RequestParam(name = "password") String password,
+		@ModelAttribute User user,
 		//사용자가 request를 보낼 때 값을 갖고 있는것?(동영상 0121,10:47분쯤)
 		//reqest객체안에 세션이 들어있음
 		HttpServletRequest request) {
 		//아이디, 패스워드 잘 갖고 왔는지 확인 
-		log.info("username: {}", username); // 로그인 아이디
-		log.info("password:{}", password); // 로그인 패스워드
-	
+		log.info("username: {}", user);
+		//username에 해당하는  User 객체를 찾는다.
+		User findUser = userService.getUserbyUsername(user.getUsername());
+		log.info("findUser:{}",findUser);
+		
+		//사용자가 입력한 username, password 정보가 데이터베이스의 user 정보와 일치하는지 확인
+		if(findUser == null || findUser.getPassword().equals(user.getPassword())) {
+			// 로그인 실패 시 로그인 페이즈로 리다이렉트
+			log.info("로그인 실패");
+			return "redirect:/users/login";
+		}log.info("로그인 성공");
+		
 		//request객체에 저장 되어 있는 Session객채를 받아온다
 		HttpSession session = request.getSession();
 		//session에 로그인 정보를 저장
-		session.setAttribute("loginUsername", username);
-							// 변수명(name) , 값(object)
+		session.setAttribute("loginUsername", findUser);
+							// 변수명(name) , 값(object type)
 		return "redirect:/";
 
 				}
+		//로그아웃
+		@GetMapping("users/logout")
+		public String logout(HttpSession session) {
+			//방법1 : loginUser 만 null처리
+//			session.setAttribute("loginUser", null);
+			//방법2 : 세션의 데이터를 모드 삭제한다.
+			session.invalidate();
+			return "redirect:/";
+		}
 		
 		//세션 저장 확인
 		@ResponseBody // return 값을 바디에 보여줌

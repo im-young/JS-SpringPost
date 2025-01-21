@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.springframework.stereotype.Service;
 
-import com.example.post.model.Post;
+import com.example.post.model.posts.Post;
 import com.example.post.repository.PostRepository;
 import com.example.post.repository.PostRepositoryImpl;
 

@@ -2,7 +2,7 @@ package com.example.post.repository;
 
 import java.util.List;
 
-import com.example.post.model.Post;
+import com.example.post.model.posts.Post;
 //#2.
 public interface PostRepository {
 //2-1. 메서드 생성
