@@ -13,6 +13,7 @@
           <a class="nav-link" href="/posts/create">글쓰기</a>
         </li>
         <!-- 로그인과 회원가입 메뉴 -->
+        <th:block th:unless = "${session.loginUser}" > <!--  이건 li블럭으로 감싸져 있어서 li 테그 안에 넣어도 괜찮음 -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="loginDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             로그인
@@ -22,7 +23,9 @@
             <li><a class="dropdown-item" href="/users/register">회원가입</a></li>
           </ul>
         </li>
-		<li class="nav-item dropdown">
+        </th:block>
+        
+		<li class="nav-item dropdown" th:if = "${session.loginUser}">
           <a class="nav-link dropdown-toggle" href="#" id="loginDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             로그아웃
           </a>

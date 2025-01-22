@@ -71,7 +71,7 @@ public class userController {
 	
 	
 		
-// =================== Day 0121 = 세션(로그인) ===============================
+// =================== Day 0121 = 세션(로그인,로그아웃 : 사용자 정보 저장) ===============================
 // 로그인 페이지 이동
 	 // 회원가입 페이지 요청 처리
 		@GetMapping("users/login")
@@ -87,13 +87,13 @@ public class userController {
 		//reqest객체안에 세션이 들어있음
 		HttpServletRequest request) {
 		//아이디, 패스워드 잘 갖고 왔는지 확인 
-		log.info("username: {}", user);
+		log.info("user: {}", user);
 		//username에 해당하는  User 객체를 찾는다.
 		User findUser = userService.getUserbyUsername(user.getUsername());
 		log.info("findUser:{}",findUser);
 		
 		//사용자가 입력한 username, password 정보가 데이터베이스의 user 정보와 일치하는지 확인
-		if(findUser == null || findUser.getPassword().equals(user.getPassword())) {
+		if(findUser == null || !findUser.getPassword().equals(user.getPassword())) {
 			// 로그인 실패 시 로그인 페이즈로 리다이렉트
 			log.info("로그인 실패");
 			return "redirect:/users/login";
@@ -102,8 +102,10 @@ public class userController {
 		//request객체에 저장 되어 있는 Session객채를 받아온다
 		HttpSession session = request.getSession();
 		//session에 로그인 정보를 저장
-		session.setAttribute("loginUsername", findUser);
+		session.setAttribute("loginUser", findUser);
 							// 변수명(name) , 값(object type)
+		log.info("세션에 저장된 loginUser: {}", session.getAttribute("loginUser"));
+
 		return "redirect:/";
 
 				}

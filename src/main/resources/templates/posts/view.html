@@ -6,6 +6,15 @@
     <title>게시글 읽기</title>
     <!-- Bootstrap CSS 추가 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- ----- 게시글 삭제 버튼 누르면 게시글 갖고와서 삭제하는 그크립트 작성  -->
+	<script>
+	function confirmDelete(postId){
+		if(confirm("정말 삭제하시겠습니까?")){
+			//url 이동 시키는 기능
+			location.href = '/posts/remove/'+postId;
+		}
+	}
+	</script>
 </head>
 <body>
 <!-- 네비게이션 바 -->
@@ -26,13 +35,21 @@
         </div>
         <div class="card-footer text-muted">
             <!-- 게시글 작성자, 조회수, 등록일 -->
-            <span >작성자:[[${post.username}]]</span> 
+            <span >작성자:[[${post.user.name}]]</span> 
             <span >조회 수: [[${post.views}]]</span> 
             <span >작성일: [[${#temporals.format(post.createTime, 'yyyy-MM-dd')}]]</span>
         </div>
     </div>
 
     <!-- 게시글 삭제 폼 -->
+    <!-- Day0122- 로그인 후 삭제
+    	로그인 사용자와 작성자가 같을 경우에만 수정, 삭제 버튼이 보여야 한다. -> 다른 사람이 작성한 게시글에서는 이 삭제하기 버튼이 안보임 -->
+<th:block th:if="${session.loginUser != null and session.loginUser.id == post.user.id}">
+    	 <br><!--  confirmDelete는 리터럴 값 -> |confirmDelete(${post.id})|-->
+    	 <button type="submit" class="btn btn-danger" th:onclick="|confirmDelete(${post.id})|">삭제하기</button>
+    	 </th:block>
+    
+    <!-- 로그인 안하고 글 작성후 삭제하기
     <div class="mt-4">
         <h4>게시글 삭제</h4>
         <form th:action="@{/posts/remove/{id}(id=${post.id})}" method="post">
@@ -40,7 +57,7 @@
                 <label for="password" class="form-label">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-danger">삭제하기</button>
+            <button type="submit" class="btn btn-danger">삭제하기</button>  -->
         </form>
     </div>
 
