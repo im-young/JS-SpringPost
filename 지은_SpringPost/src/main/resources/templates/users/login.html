@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- 네비게이션 바 -->
+<div th:replace="~{navi :: navi}"></div>
+
+<div class="container my-5">
+    <h2>로그인</h2>
+
+    <!-- 로그인 폼 -->
+    <form action="/users/login" method="post" th:object="${userLoginDto}">
+    	<th:block th:if="${#fields.hasGlobalErrors()}"> !!! 앞의 globalErrors () 에서 오류를 갖고옴
+    		<div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}"
+           !!!bindingResult.reject에서 발생한 오류처리 :   #fields.globalErrors()에서 꺼내와서 변수에 담기,리젝트(bindingResult.reject)를 한 횟수만큼 반복해서 (필드 에러 검사 X ,bindingResult.reject에서 발생한 오류 보여줌)
+    		th:text="${err}"></div> 
+    	</th:block>
+        <div class="mb-3">
+            <label for="username" class="form-label">사용자명</label>
+            <input type="text" class="form-control" th:field="*{username}" required>
+                                               !!! th:object="${userLoginDto} 의 필드값값(폼테그에 작성)
+           !!!  required : 일차 유효성 검사 (빈값 검사)
+        </div>
+        <div class="alert alert-danger" th:errors="*{username}"></div>
+                                        !!!필드에러 메세지가 나옴, 별도로 설정하지 않아도 기본값을 가지고 있음음 -> 필드 클래스에서 메세지 지정(커스텀)도 가능능
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" th:field="*{password}" required>
+        </div>
+        <div class="alert alert-danger" th:errors="*{password}"></div>
+        <button type="submit" class="btn btn-primary">로그인</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS 및 의존성 스크립트 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

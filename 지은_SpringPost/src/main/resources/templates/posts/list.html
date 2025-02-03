@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게시글 전체보기</title>
+<!-- Bootstrap CSS 추가 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+	<!-- 네비게이션 바 -->
+	<div th:replace="~{navi :: navi}"></div>
+
+	<div class="container my-5">
+		<h2>게시글 전체보기</h2>
+
+		<!-- 게시글 목록 테이블 -->
+		<table class="table">
+			<thead class="table-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">제목</th>
+					<th scope="col">작성자</th>
+					<th scope="col">조회수</th>
+					<th scope="col">등록일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 서버에서 게시글 데이터를 동적으로 로드 -->
+				<tr th:each="post : ${posts}">
+					<td th:text="${postStat.count}">1</td>
+					<td><a th:href="@{/posts/{id}(id = ${post.id})}"
+						th:text="${post.title}">제목</a></td>
+					<td>[[${post.user.name}]]</td>
+					<td>[[${post.views}]]</td>
+					<td>[[${#temporals.format(post.createTime, 'yyyy-MM-dd')}]]</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Bootstrap JS 및 의존성 스크립트 추가 -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
