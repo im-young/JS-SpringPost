@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.post.model.users.User;
+import com.example.post.model.users.UserCreateDto;
+import com.example.post.model.users.UserLoginDto;
 import com.example.post.repository.UserRepository;
 import com.example.post.service.UserService;
 
@@ -34,14 +38,14 @@ public class userController {
 //		@Autowired
 		private final UserService userService; // 이 때 무조건 final 붙여야함
 		
- // 회원가입 페이지 요청 처리
-	@GetMapping("users/register")
-	public String register() {
-		
-		return "users/register";
-	}
+// // 회원가입 페이지 요청 처리
+//	@GetMapping("users/register")
+//	public String register() {
+//		
+//		return "users/register";
+//	}
 // 회원가입 요청 처리
-	//방법1
+	//방법1 ---------------------
 //	@PostMapping(path="register_v3")
 //	public String register_v3(
 //			
@@ -54,62 +58,135 @@ public class userController {
 //		
 //		return "register_success";
 //	}
-	//방법2.class로 불러오기
-	@PostMapping(path="users/register") // register_v3에서 register로 변경
-	public String regiter_v3_class(
-			@ModelAttribute User user) {
+	//방법2.class로 불러오기 ---------------------------------------
+//	@PostMapping(path="users/register") // register_v3에서 register로 변경
+//	public String regiter_v3_class(
+//			@ModelAttribute User user) {
+//		
+////		log.info("email:{}",user);// 확인용
+////		log.info("name:{}",user.getName());
+//		// 
+//		User registedUser = userService.registerUser(user); // user 생성
+//		log.info("registedUser:{}", registedUser); // 확인용
+//
+//		
+//		return "redirect:/"; //index페이지로 이동
+//	}
+	
+//회원 가입 여청 처리(V5_day 0124 : 유효성 검사) --------------------
+	//회원가입 페이지 요청 처리
+	 // 회원가입 페이지 요청 처리
+		@GetMapping("users/register")
+		public String register(Model model) {
+			UserCreateDto userCreateDto = new UserCreateDto();
+			model.addAttribute("userCreateDto",userCreateDto);
+			return "users/register";
+		}
+	//회원가입 작업 
+	@PostMapping(path="users/register")
+	public String registerUser(
+			
+			@Validated // 유효성 체크 : @ModelAttribute UserCreateDto userCreateDto서 값을 갖고 올 때 , 이 어노테이션이 있으면 유효성 검사를 해야지 하는 것 (파라미터로 유효성 검증하는 것)
+			//@Validate 도 가능
+			@ModelAttribute UserCreateDto userCreateDto, //html의 값을 여기에 담음 -> userdto의 변수명을 사용 할 수 있음
+			BindingResult bindingResult // 위치는 validation 다음에 위치 , 유효성 검증에서 오류나도 페이지가 넘어감
+			
+			) {
+		// 유효성 검증이 실패 했는지 확인
+		if(bindingResult.hasErrors()) {
+			log.info("유효성 검증 실패");
+			return "users/register";
+		}
+//		User registedUser = userService.registerUser(user); // user 생성
 		
-//		log.info("email:{}",user);// 확인용
-//		log.info("name:{}",user.getName());
-		// 
-		User registedUser = userService.registerUser(user);
-		log.info("registedUser:{}", registedUser); // 확인용
-
+		// username 중복 확인 (Day 0203)
+		if (userService.getUserbyUsername(userCreateDto.getUsername()) != null) {
+		// 이미 사용중인 username이 있다.
+			// 에러코드는 errors.properties 파일에 정의된 에러 코드와 메세지를 사용한다. 
+			//bindingResult.reject("duplicateUsername", "이미 사용중인 아이디 입니다.");
+			bindingResult.reject("duplicateUsername.username");
+		return "users/register";
+		}
 		
-		return "redirect:/"; //index페이지로 이동
+		return "redirect:/";
 	}
 	
 	
 		
 // =================== Day 0121 = 세션(로그인,로그아웃 : 사용자 정보 저장) ===============================
-// 로그인 페이지 이동
-	 // 회원가입 페이지 요청 처리
+//// 로그인 페이지 이동
+//	 // 회원가입 페이지 요청 처리
+//		@GetMapping("users/login")
+//		public String login() {
+//			
+//			return "users/login";
+//		}
+////		// 로그인
+//		@PostMapping("users/login")
+//		public String login(
+//		@ModelAttribute User user,
+//		//사용자가 request를 보낼 때 값을 갖고 있는것?(동영상 0121,10:47분쯤)
+//		//reqest객체안에 세션이 들어있음
+//		HttpServletRequest request) {
+//		//아이디, 패스워드 잘 갖고 왔는지 확인 
+//		log.info("user: {}", user);
+//		//username에 해당하는  User 객체를 찾는다.
+//		User findUser = userService.getUserbyUsername(user.getUsername());
+//		log.info("findUser:{}",findUser);
+//		
+//		//사용자가 입력한 username, password 정보가 데이터베이스의 user 정보와 일치하는지 확인
+//		if(findUser == null || !findUser.getPassword().equals(user.getPassword())) {
+//			// 로그인 실패 시 로그인 페이즈로 리다이렉트
+//			log.info("로그인 실패");
+//			return "redirect:/users/login";
+//		}log.info("로그인 성공");
+//		
+//		//request객체에 저장 되어 있는 Session객채를 받아온다
+//		HttpSession session = request.getSession();
+//		//session에 로그인 정보를 저장
+//		session.setAttribute("loginUser", findUser);
+//							// 변수명(name) , 값(object type)
+//		log.info("세션에 저장된 loginUser: {}", session.getAttribute("loginUser"));
+//
+//		return "redirect:/";
+//
+//				}
+		
+	//-------- 로그인 유효성 ㅇ검사
+		// 로그인 페이지 이동
 		@GetMapping("users/login")
-		public String login() {
-			
-			return "users/login";
+		public String loginForm(Model model) {
+		model.addAttribute("userLoginDto", new UserLoginDto());
+		return "users/login";
+
 		}
-//		// 로그인
+
+//		//로그인 유효성 검사
 		@PostMapping("users/login")
 		public String login(
-		@ModelAttribute User user,
-		//사용자가 request를 보낼 때 값을 갖고 있는것?(동영상 0121,10:47분쯤)
-		//reqest객체안에 세션이 들어있음
-		HttpServletRequest request) {
-		//아이디, 패스워드 잘 갖고 왔는지 확인 
-		log.info("user: {}", user);
-		//username에 해당하는  User 객체를 찾는다.
-		User findUser = userService.getUserbyUsername(user.getUsername());
-		log.info("findUser:{}",findUser);
-		
-		//사용자가 입력한 username, password 정보가 데이터베이스의 user 정보와 일치하는지 확인
-		if(findUser == null || !findUser.getPassword().equals(user.getPassword())) {
-			// 로그인 실패 시 로그인 페이즈로 리다이렉트
-			log.info("로그인 실패");
-			return "redirect:/users/login";
-		}log.info("로그인 성공");
-		
-		//request객체에 저장 되어 있는 Session객채를 받아온다
-		HttpSession session = request.getSession();
-		//session에 로그인 정보를 저장
-		session.setAttribute("loginUser", findUser);
-							// 변수명(name) , 값(object type)
-		log.info("세션에 저장된 loginUser: {}", session.getAttribute("loginUser"));
+		@Validated @ModelAttribute UserLoginDto userLoginDto,
+		BindingResult bindingResult, //validated 검증해서 다시 떠있게 하는거? 
+		HttpServletRequest request) { //세션 갖고오기
+			// 로그인 정보 검증에 실패하면 로그인 페이지로
+			if (bindingResult.hasErrors()) {
+				return "users/login";
+			};
+			log.info("user: {}", userLoginDto);
+			
+			// username에 해당하는 User 객체 탐색
+			User findUser = userService.getUserbyUsername(userLoginDto.getUsername());
+			log.info("findUser: {}", findUser);
+			// 사용자가 입력한 username, password 정보가 데이터베이스의 User 정보와 일치하는지 확인
+			if (findUser == null || !findUser.getPassword().equals(userLoginDto.getPassword())) {
+				// 로그인 실패 시 로그인 페이지로 리다이렉트
+				bindingResult.reject("loginFailed", "아이디 또는 패스워드가 다릅니다.");
+		};
+		return "/users/login"; ///!!! 이부분 코드 다시 보기
+		}
 
-		return "redirect:/";
-
-				}
-		//로그아웃
+		
+		
+		//로그아웃===================
 		@GetMapping("users/logout")
 		public String logout(HttpSession session) {
 			//방법1 : loginUser 만 null처리
@@ -136,5 +213,25 @@ public class userController {
 			
 			return "ok";
 					
+		}
+		
+		
+		//회원정보 수정
+		@GetMapping("users/updateuser")
+		public String updateUser(
+				) {
+			
+			return "users/updateuser";
+		}
+		
+		@PostMapping("users/updateuser")
+		public String updateUser1(
+				@ModelAttribute User user
+				) {
+			Long id = user.getId();
+			String password = user.getPassword();
+			String email = user.getEmail();
+			userService.updateUser(id, password, email);
+			return "users/index";
 		}
 }

@@ -26,8 +26,15 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+ 	//spring Data JPA 디펜던시
+ 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+ 	//Bean Validation
+ 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// 어떤 sql을 사용할껀지 :  mysql디펜던시
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

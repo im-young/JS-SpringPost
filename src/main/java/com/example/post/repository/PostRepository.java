@@ -2,18 +2,14 @@ package com.example.post.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.example.post.model.posts.Post;
+import com.example.post.model.users.User;
 //#2.
-public interface PostRepository {
-//2-1. 메서드 생성
-	//글 등록
-	void savePost(Post post); // 접근제어자 안붙어 있음 : 인터페이스는 모든 메서드가 다 퍼블릭이다
-	// 글 전체 조회
-	List<Post> findAllPosts();
-	// 아이디로 글 조회
-	Post findPostById(Long postId);
-	//글 수정
-	void updatePost(Post updatePosst);
-	// 글 삭제
-	void removePost(Long postId);
+public interface PostRepository extends JpaRepository<Post, Long> {
+	//구현체는 jpa가 알아서 만들어 줌 				// T: 어떤 엔티티 타입을 관리 할꺼냐, id : user에 있는 id 타입
+	
+
+
 }

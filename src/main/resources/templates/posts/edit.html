@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- 네비게이션 바 -->
+<div th:replace="~{navi :: navi}"></div>
+
+<div class="container my-5">
+    <h2>게시글 작성</h2>
+    <!-- 게시글 작성 폼 -->
+<form th:action="@{/posts/edit/{postId}(postId=${post.id})}" method="post" th:object=${post}>
+        <!-- action : submit 했을 때 어디로 전송 될꺼냐  
+     		 method  : 전송 방식(form 데이터는 대부분 post)-->
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" th:field =*{title}  th:value="*{title}" required
+            >										
+          
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" th:field="${post.content}" rows="5" th:text="${post.content}" required
+            ></textarea>
+            
+        </div>
+        
+        <button type="submit" class="btn btn-primary">저장</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS 및 의존성 스크립트 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
