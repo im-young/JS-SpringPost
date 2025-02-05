@@ -41,10 +41,10 @@ public class PostController {
 			@SessionAttribute(name = "loginUser", required = false) User loginUser) {
 		// 사용자가 로그인 했는지 체크
 		log.info("loginUser:{}", loginUser);
-		if (loginUser == null) {
-			// 로그인을 하지 않았으면 로그인 페이지로 리다이렉트
-			return "redirect:/users/login";
-		}
+//		if (loginUser == null) {
+//			// 로그인을 하지 않았으면 로그인 페이지로 리다이렉트
+//			return "redirect:/users/login";
+//		}
 		// 게시글 작성 페이지의 뷰 이름을 리턴
 		return "posts/create";
 	}
@@ -78,9 +78,9 @@ public class PostController {
 			@SessionAttribute(name = "loginUser") User loginUser, //로그인 상태인지 확인
 			Model model) {
 			// 로그인 안되어 있으면 로그인 페이지로 가기
-		if (loginUser == null) {
-			return "redirect:/usesr/login";
-		}
+//		if (loginUser == null) {
+//			return "redirect:/usesr/login";
+//		}
 		//목록보기, 글쓰기, 수정하기 삭제하기 모두 로그인 체크 해야함(수정 페이지로 갈 때도 체크 해야함) -> 
 		
 		List<Post> posts = postService.getAllPosts();

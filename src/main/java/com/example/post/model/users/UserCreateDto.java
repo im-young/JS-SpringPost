@@ -32,4 +32,30 @@ public class UserCreateDto {
 		@DateTimeFormat(pattern ="yyyy-MM-dd")
 		private LocalDate birthDate;
 		private String email;
+		
+		
+		// 로그인 체크 
+		public User toEntity() { // 바로 엔티티 타입으로 변환 -> 컨트롤러에서 엔티티로 바꾸는 코드를 작성하지 않아도 됨
+//			User user = new User();
+//			user.setUsername(this.getUsername());
+//			user.setPassword(this.getPassword());
+//			user.setName(this.getName());
+//			user.setBirthDate(this.getBirthDate());
+//			user.setGender(this.getGender());
+//			user.setEmail(this.getEmail());
+//			return user;
+
+			// 빌드업 패턴 ================= 
+			// 메서드.메서드. ... (메서드 체인 방식을 통해서 사용)
+			//// 모든 필드를 파라미터로 받는 생성자와 아무것도 받지 않는 생성자가 필요함 -> model의 user에 어노테이션 달아줘야함
+			
+			return User.builder()
+					.username(this.username)
+					.password(this. password)
+					.name(this.name)
+					.gender(this.gender)
+					.birthDate(this.birthDate)
+					.email(this.email)
+					.build();
+			}
 }

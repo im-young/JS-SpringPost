@@ -11,11 +11,21 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Entity
 @Data
 @Setter
+//------ 빌드업 패턴---------
+// 모든 필드를 파라미터로 받는 생성자와 아무것도 받지 않는 생성자가 필요함
+@Builder
+@AllArgsConstructor // 모든 필드를 파라미터로 받는 생성자
+@NoArgsConstructor// 기본 생성자
+
 public class User {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) //프라이머리 키값을 안쓰기 위해서? 
 	private Long id; // 회원 정보를 구분하는 ID
@@ -35,6 +45,9 @@ public class User {
 	private LocalDate birthDate;
 	private String email;
 
+	
+	// 빌드업 패턴 ==============================
+				// 모든 필드를 파라미터로 받는 생성자와 아무것도 받지 않는 생성자가 필요함
 	
 
 }
