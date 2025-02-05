@@ -186,22 +186,22 @@ public class userController {
 		;
 		log.info("user: {}", userLoginDto);
 
-		// username에 해당하는 User 객체 탐색
-//		User findUser = userService.getUserbyUsername(userLoginDto.getUsername());
-//		log.info("findUser: {}", findUser);
-//		// 사용자가 입력한 username, password 정보가 데이터베이스의 User 정보와 일치하는지 확인
-//		if (findUser == null || !findUser.getPassword().equals(userLoginDto.getPassword())) {
-//			// 로그인 실패 시 로그인 페이지로 리다이렉트
-//			bindingResult.reject("loginFailed", "아이디 또는 패스워드가 다릅니다.");
-//			return "/users/login";
-//		}		;
-		
+//		 username에 해당하는 User 객체 탐색
+		User findUser = userService.getUserbyUsername(userLoginDto.getUsername());
+		log.info("findUser: {}", findUser);
+		// 사용자가 입력한 username, password 정보가 데이터베이스의 User 정보와 일치하는지 확인
+		if (findUser == null || !findUser.getPassword().equals(userLoginDto.getPassword())) {
+			// 로그인 실패 시 로그인 페이지로 리다이렉트
+			bindingResult.reject("loginFailed", "아이디 또는 패스워드가 다릅니다.");
+			return "/users/login";
+		}		;
+	// Day0205 	
 	//Request 객체에 저장되어 있는 Session 객체를 받아온다.
 		HttpSession session = request.getSession();
 		//session에 로그인 정보를 저장한다
 		session.setAttribute("loginUser", findUser);
-		
-		return "redirect:" + redirectURL		
+		return "redirect:" + redirectURL	;
+	}
 		
 		
 
