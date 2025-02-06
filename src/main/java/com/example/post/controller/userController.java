@@ -75,7 +75,7 @@ public class userController {
 //		return "redirect:/"; //index페이지로 이동
 //	}
 
-//회원 가입 여청 처리(V5_day 0124 : 유효성 검사) --------------------
+//회원 가입 여청 처리(메서드V5_day 0124 : 유효성 검사) --------------------
 	// 회원가입 페이지 요청 처리
 	// 회원가입 페이지 요청 처리
 	@GetMapping("users/register")
@@ -183,7 +183,6 @@ public class userController {
 		if (bindingResult.hasErrors()) { // 에러가 있으면 return 으로 보냄(화면 전환)
 			return "users/login";
 		}
-		;
 		log.info("user: {}", userLoginDto);
 
 //		 username에 해당하는 User 객체 탐색
@@ -194,8 +193,9 @@ public class userController {
 			// 로그인 실패 시 로그인 페이지로 리다이렉트
 			bindingResult.reject("loginFailed", "아이디 또는 패스워드가 다릅니다.");
 			return "/users/login";
-		}		;
-	// Day0205 	
+		}	
+	
+//	// Day0205 	
 	//Request 객체에 저장되어 있는 Session 객체를 받아온다.
 		HttpSession session = request.getSession();
 		//session에 로그인 정보를 저장한다

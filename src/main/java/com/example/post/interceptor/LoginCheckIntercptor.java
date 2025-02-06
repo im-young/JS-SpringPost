@@ -21,7 +21,8 @@ public boolean preHandle(HttpServletRequest request, HttpServletResponse respons
 	if(session == null || session.getAttribute("loginUser") == null) {
 		// 로그인을 하지 않은 경우 -> 로그인 페이지로 리다이렉트
 		log.info("로그인 하지 않은 사용자 입니다.");
-		response.sendRedirect("/users/login=" + requestURI); // 원래 사용자가 갈려고 했던 url 값을 붙여서 리다이렉트 보내기 => 로그인 후 사용자가 가려고 했던 페이지로 이동 함
+		//Day0205
+		response.sendRedirect("/users/login?redirectURL=" + requestURI); // 원래 사용자가 갈려고 했던 url 값을 붙여서 리다이렉트 보내기 => 로그인 후 사용자가 가려고 했던 페이지로 이동 함
 		return false;
 	}
 	
