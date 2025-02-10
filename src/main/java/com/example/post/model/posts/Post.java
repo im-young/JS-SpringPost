@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.example.post.model.users.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,7 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
+import lombok.ToString;
 @Data
 @Entity
 public class Post {
@@ -38,6 +41,16 @@ public class Post {
 	private User user; // 회원가입 or 로그인한 사용자의 정보를 갖오오기 -> 위의 작성자 비밀변호 필요없음
 	private int views;		//조회수 // 0부터 시작해서 손볼것이 없음
 	private LocalDateTime createTime;	//작성일 // 이 친구는 값을 세팅 해줘야함
+	
+	// 파일 업로드
+	// 양방향으로 작성함(여기도 @onetoone 어노테이션을 붙여줌) 
+	@OneToOne(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true) 
+								// post와 fileAttachmentl은 생명주기를 같이함 // fileAttachmentl 가 고아가 되면 자동 삭제됨 
+		// mappedBy : 연관관계의 주인의 필드명
+	
+	// 파일 어텐션먼트는 안찍힘 -> stakeOF Flow 오류 안남
+	private FileAttachment fileAttachment;
+	
 	
 //1-2조회수 증가
 	public void incrementViews() {

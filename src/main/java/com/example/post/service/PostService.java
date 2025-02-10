@@ -1,18 +1,22 @@
 package com.example.post.service;
 
-import java.awt.Container;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.startup.ClassLoaderFactory.Repository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.post.model.posts.FileAttachment;
 import com.example.post.model.posts.Post;
-import com.example.post.model.users.User;
 import com.example.post.repository.PostRepository;
+import com.example.post.util.FileAttachmentUtil;
 
 import lombok.RequiredArgsConstructor;
 //#4.
@@ -22,6 +26,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+	// 파일 업로드
+	//업로드 경로 
+	@Value("${file.upload.path}")
+	private String uploadPath; // 파일 업로드 경로
+	
 // 4-1. 의존성 주입
 	//필드 선언 방식
 	//PostService 객체 생성 시점에 스프링 컨테이너가 자동으로 의존성을 주입(Dependency Injection)해 준다.
@@ -32,17 +41,39 @@ public class PostService {
 	//글 저장
 	@Transactional // 없어도 동작을 하긴 하지만 커밋,롤백이 필요한 작업이 있으면 해놓는게 좋음
 	public Post savePost(
-			Post post) {
+			Post post, MultipartFile file  ) {// 파일 업로드를 위해서
 		//6-1. dataTime 값 설정해주기 (saveService 완성)
-		post.setCreateTime(LocalDateTime.now()); // 
+		post.setCreateTime(LocalDateTime.now()); 
+
+//= 파일 업로드Day0207============================================
+		// 첨부파일이 존재하는 지 확인한기 
+
+		if (file!=null && !file.isEmpty()) {
+			
+			//  첨부파일을 저장
+			String storedFilename = FileAttachmentUtil.uploadFile(file,uploadPath);
+			// attachment에 파일 정보 넣기
+			FileAttachment fileAttachment = new FileAttachment();
+			fileAttachment.setOriginalFilename(file.getOriginalFilename());
+			fileAttachment.setStoredFilename(storedFilename);
+			fileAttachment.setSize(file.getSize());
+			fileAttachment.setPost(post);
+
+			// 양방향이라서 post에도 정보 버장 
+			post.setFileAttachment(fileAttachment);
+		}
 		postRepository.save(post);
 		return post;
 	}
 	// 글 젖체 조회
-	public List<Post> getAllPosts(){
-		return postRepository.findAll();
+	public Page<Post> getAllPosts(int page, int size){
+		
+//		return postRepository.findAllPosts();// 내림차순
+		Pageable pageable=PageRequest.of(page, size);
+		return postRepository.findAl1ByOrderByCreateTimeDesc(pageable);// 내림차순
+
 	}
-	
+
 	
 	@Transactional // 여기서는 이거 없으면 작동안함 
 //	@Override
@@ -58,13 +89,19 @@ public class PostService {
 //		}
 //		return null;
 		 // 방법2. 값이 없으면 예외를 던짐
-	    Post post = findPost.orElseThrow(
-	        () -> new IllegalArgumentException("글을 찾을 수 없습니다.")
-	    ); // null이면 예외를 던지고 아니면 post를 리턴함.
+		Post post = findPost.orElseThrow(// null이면 예외를 던지고 아니면 post를 리턴함.
+				() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+
+//	    Post post = findPost.get();
+
 		post.incrementViews(); // 변경감지는 같은 트렌젝션 안에서만 가능 -> 같은 트렌젝션아에 안들어 와있어서 db에 반영 안됨
 		// 쿼리가 두번 실행됨 -> select(findPost) 와 update (post) -> 이걸 하나의 트렌젝션으로 묶어야함 -> 하는 방법 : @Transactioal(spring꺼) 붙여주기
+
+		//		findPost.orElse(null); //이것도 될듯 . 값이 없으면 null 출력
+		
 		return post;
-		//		findPost.orElse(null); 이것도 될듯 . 값이 없으면 null 출력
+				
 	}
 	
 	//글 삭제 : 로그인 안 하고 삭제
@@ -94,6 +131,6 @@ public class PostService {
 	    post.setContent(content);
 	    postRepository.save(post);
 	    return post;
-	} 
-			
+	}
+
 }

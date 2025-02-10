@@ -67,9 +67,9 @@ public class UserService {
 		User user = userRepository.findByUsername(username);
 
 		// user가 null 이면 예외 발생 -> 컨트롤러 단에서 null 일때의 코드가 필요 없음
-		if (user == null) {
-			throw new NoSuchElementException("사용자가 존재하지 않습니다.");
-		}
+//		if (user == null) {
+//			throw new NoSuchElementException("사용자가 존재하지 않습니다.");
+//		}
 		return user;
 	}
 

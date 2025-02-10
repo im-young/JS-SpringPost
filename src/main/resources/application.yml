@@ -7,5 +7,5 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update #create-drop #  create-drop: 실행 할 대 마다 테이블 삭제 후 생성, update 기존에 엤는거사용: 여기서 이거 사용 할꺼면 WebConfig에 @Bean 주석처리 (안하면 계속 생성)
-    show-sql: true 
+      ddl-auto: update #update #create-drop #  create-drop: 실행 할 대 마다 테이블 삭제 후 생성, update 기존에 엤는거사용: 여기서 이거 사용 할꺼면 WebConfig에 @Bean 주석처리 (안하면 계속 생성)
+    show-sql: true

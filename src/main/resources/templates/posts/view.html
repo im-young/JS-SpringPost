@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+<html xmlns:th=http://www.tymeleaf.org>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,6 +35,16 @@
 			<div class="card-body">
 				<!-- 게시글 내용 -->
 				<p th:text="${post.content}">내용</p>
+			</div>
+			<!-- 첨부파일 표시 -->
+			<div class = "mb-4">
+				<label class="form-label">첨부파일</label>
+				<ul>
+					<il th:if="${post.fileAttachment}">
+						<a th:href="@{/posts/{postId}/download/{fileAttachmentId}
+						(postId=${post.id}, fileAttachmentId=${post.fileAttachment.id})}"
+						th:text ="${post.fileAttachment.originalFilename}"></a>
+				</ul>
 			</div>
 			<div class="card-footer text-muted">
 				<!-- 게시글 작성자, 조회수, 등록일 -->

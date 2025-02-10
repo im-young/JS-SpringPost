@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+<html xmlns:th=http://www.tymeleaf.org lang="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,17 +30,40 @@
         <!-- 서버에서 게시글 데이터를 동적으로 로드 
         
         -->
-        <tr th:each = "post : ${posts}">
-            <td th:text = "${postStat.count}" >1</td>
+        <tr th:each="post : ${posts}">
+            <td th:text="${postStat.count}">1</td>
             <td><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">제목</a></td>
             <!-- 로그인 방식 사용하면서 이거 못씀
             <td th:text = "${post.username}">홍길동</td>-->
-             <td th:text = "${post.user.name}">홍길동</td>
-            <td >[[${post.views}]]</td><!-- 인라인 방식 -->
-            <td >[[${#temporals.format(post.createTime, 'yyyy-MM-dd')}]]</td>
+            <td th:if="${post != null and post.user != null}" th:text="${post.user.name}">홍길동</td>
+            <td th:unless="${post != null and post.user != null}">정보 없음</td>
+            <td>[[${post.views}]]</td><!-- 인라인 방식 -->
+            <td>[[${#temporals.format(post.createTime, 'yyyy-MM-dd')}]]</td>
         </tr>
         </tbody>
     </table>
+    <!--    페이지 처리 -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" th:href="@{/posts(page=${navi.currentPage - navi.pagePerGroup})}"> 이전 그룹 </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{/posts(page=${navi.startPageGroup-1})}"> 이전 </a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+                <a class="page-link" th:href="@{/posts(page=${pageNum})}" th:text = "${pageNum + 1}">1 </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{/posts(page=${navi.startPageGroup+1})}"> 다음 </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{/posts(page=${navi.currentPage + navi.pagePerGroup})}"> 다음 그룹 </a>
+            </li>
+        </ul>
+
+    </nav>
+<!--     페이지 처리 -->
 </div>
 
 <!-- Bootstrap JS 및 의존성 스크립트 추가 -->

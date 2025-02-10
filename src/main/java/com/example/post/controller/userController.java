@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,15 +25,12 @@ import com.example.post.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 
 //import com.example.SpringBoot_WebMvc.controller.RequestParamController;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.implementation.bytecode.constant.DefaultValue;
 
 @RequiredArgsConstructor // 생성자 주입 롬복 어노테이션 -> 필드에 선언하면 따로 생성자를 안 만들어도 됨
-
 @Controller
 @Slf4j
 public class userController {
