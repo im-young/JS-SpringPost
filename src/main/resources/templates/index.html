@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th=http://www.tymeleaf.org>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -11,27 +10,15 @@
 <body>
 <!-- 네비게이션 바 -->
 <div th:replace="~{navi :: navi}"></div>
-<!-- th:replace=       :  replace라고 지정 되어 있는것을 프래크 넌트로 바꿔줌
-	 "~{navi :: navi}" : -{파일이름(navi.thml) :: 프래그넌트의 이름(navi.html안에 있는 프레그넌트(th:fragment="navi")
-	 	 					-> 프래그넌트로 지정한 내부태그로 변경됨 <nav th:fragment="navi"></nav> 
--->
 
 <!-- 페이지 내용 -->
 <div class="container my-5">
-	<!-- 메세지 출력 ----------------------- -->
-	<span th:with = "message = 'Hello world'">
-		<p th:text = "${message}"></p>
-		</span>
-    <h1 class="text-center">게시판 V5 메인 페이지</h1>
-    
-    <!-- ------- 아래 코드는 로그인을 하지 않으면 오류가 남 -> 로그인을 하지 안으면 저장된 세션이 없어서 -->
-    <!-- <p class="text-center mt-4"><sapn th:text = "${session.loginUser.name}"></sapn>환영합니다! 게시판 V2의 메인 페이지입니다.</p> --> 
+	<h1 class="text-center">게시판 V5 메인 페이지</h1>
     <p class="text-center mt-4">
-    <th:block th:if =${session.loginUser}>
-    	[[${session.loginUser.name}]]님    	
-   	</th:block>
-    	환영합니다! 게시판 V2의 메인 페이지입니다.</p>
-    
+    	<th:block th:if="${session.loginUser}">
+    		[[${session.loginUser.name}]] 님 
+    	</th:block>	
+     환영합니다! 게시판 V5의 메인 페이지입니다.</p>
 </div>
 
 <!-- Bootstrap JS 및 의존성 스크립트 추가 -->

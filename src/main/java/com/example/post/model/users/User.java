@@ -31,7 +31,7 @@ public class User {
 	private Long id; // 회원 정보를 구분하는 ID
 	
 	// 유효성 검사 -----
-	@NotBlank 
+	@NotBlank //html의 request와 같다.
 	@Size(min = 4, max = 20)
 	//-----
 	private String username;// 로그안 아이디

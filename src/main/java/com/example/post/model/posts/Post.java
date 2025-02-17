@@ -15,10 +15,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 @Data
-@Entity
+@Entity // db에 저장
+@NoArgsConstructor //추가
+@AllArgsConstructor //추가
 public class Post {
 //# 1.
 //1-1.필드 정의 : html(create 의 태그 name과 같은지 봐야함)

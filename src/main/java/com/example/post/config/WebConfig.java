@@ -46,21 +46,26 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	//====  Day  ---
 	//===Day0206 : 예외처리 위해 주석처리 : 이거 실행되면 계속 로그인 하라고 뜸
-//	@Override
-//	public void addInterceptors(InterceptorRegistry registry) {
-////		// 여기서 인터셉트를 등록함
-////		registry.addInterceptor(new LogInterceptor()) // 파라미터로 handle
-////		// 인터셉터의 실행 순서
-////		.order(1)
-////		//인터셉터를 적용할 url 패턴을 지정 
-////		.addPathPatterns("/**") ;// "/**" 모든 경로(필터에서는"/*")
-//		
-//		//--- LoginCheckIntercptor 
-//		registry.addInterceptor(new LoginCheckIntercptor())
-//		.order(2)
-//		.addPathPatterns("/**")
-//		.excludePathPatterns("/","users/register","/users/login","users/logout"); // 제외할 html 경로들(필터에서 whitelist)
-//	}
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+//		// 여기서 인터셉트를 등록함
+//		registry.addInterceptor(new LogInterceptor()) // 파라미터로 handle
+//		// 인터셉터의 실행 순서
+//		.order(1)
+//		//인터셉터를 적용할 url 패턴을 지정
+//		.addPathPatterns("/**") ;// "/**" 모든 경로(필터에서는"/*")
+
+		//--- LoginCheckIntercptor	
+		registry.addInterceptor(new LoginCheckIntercptor())
+		.order(2)
+		.addPathPatterns("/**")
+		.excludePathPatterns("/","users/register","/users/login","users/logout","/api/**"); // 제외할 html 경로들(필터에서 whitelist)
+	}
+
+
+
+
 	
-	
+
+
 }

@@ -75,7 +75,6 @@ public class userController {
 
 //회원 가입 여청 처리(메서드V5_day 0124 : 유효성 검사) --------------------
 	// 회원가입 페이지 요청 처리
-	// 회원가입 페이지 요청 처리
 	@GetMapping("users/register")
 	public String register(Model model) {
 		UserCreateDto userCreateDto = new UserCreateDto();

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko">
-<html xmlns:th=http://www.tymeleaf.org>
+<html lang="ko"
+	  xmlns:th=http://www.tymeleaf.org>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,77 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <!-- ----- 게시글 삭제 버튼 누르면 게시글 갖고와서 삭제하는 그크립트 작성  -->
-<script>
+<script th:inline="javascript">
+<!--	댓글작성-->
+// document 모두 로딩된 이후에 실행 : 이벤터를 걸려면 폼테그가 완성(바디가 만들어 지고 나서)되야함
+	// script가 바디보다 아래에 있으면 상관 없는데, 위에 있어서 이 스크립트가 먼저 실행됨
+		// 바디가 만들어 지고 나서 실행되 도록 하기 위함
+		document.addEventListener('DOMContentLoaded',()=>{ // 바디가 다 만들어 지고 나면
+		//정체 댓글 불러오기
+		getComments();
+ //밑에 댓글 작성 폼을 갖고옴
+		const commentForm = document.getElementById('commentForm');
+		//댓글 추가
+		commentForm.addEventListener('submit',(e) =>{ // e: submit 이벤트(댓글 작성시 작동 되는 이벤트)
+		//form submit 이벤트 진행을 중지
+		e.preventDefault();
+		//console.log('댓글중록 버튼 클릭');(댓글 버튼 실행하는지 확인)
+		const formData = new FormData(commentForm);
+		const content = formData.get('content');
+		//console.log(content);(내가 작성한 값이 나오는지 확인)
+
+		//값 벡엔드로 보내기
+		fetch(commentForm.action,{
+			// commentForm: form id ,action : commentForm의 action(댓글 작성 html 부분에 있는)으로 보냄
+			// 요청하는 url정보 , {요청방식, 요청헤더값: 내가 보낸  컨텐츠 타입, 바디에 들어갈 내용:파싱할 오브젝트 등(, 로 구분)}
+
+			method : 'POST',
+			headers : {'Content-Type' : 'application/json'}, // 기본형식은 text
+			body : JSON.stringify({//자바스크립트의 object 형식을 파싱해줌
+				content: content
+			}),
+			})
+			.then(response => response.json())// 받은 응답값을 제이슨 형식으로
+			.then(data=> {
+				console.log(data);
+				//댓글 목록 불러오기
+				getComments();}) // 성공하면 data 변수로 받음
+			.catch(error => console.error(error)); // 실패하면 에러 작성
+		});
+		});
+
+
+			// 댓글 불러오기
+    	function getComments() {
+    		console.log("댓글 목록 불러오기");
+    		const commentList = document.getElementById('commentList');
+
+    		fetch(`/api/posts/[[${post.id}]]/comments`)
+    		.then(response => response.json())
+    		.then(data => {
+    			commentList.innerHTML = '';
+    			data.forEach(comment => {
+    				let commentItem = `
+    					<li id="comment-"${comment.id}" class="list-group">
+    						<p><strong>${comment.username}</strong>: ${comment.content}</p>
+    						// 작성자만 수정 삭제 버튼을 노출한다.
+    						if (comment.userId == [[${session.loginUser.id}]]) {
+    							commentItem +=
+	    						<div class="text-end">
+	    							<button class="btn btn-sm btn-outline-primary" onclick="editComment(${comment.id})">수정</button>
+	    							<button class="btn btn-sm btn-outline-danger" onclick="deleteComment(${comment.id})">삭제</button>
+	    						</div>
+    						};
+    					</li>`
+    				commentList.innerHTML += commentItem;
+    			});
+    		})
+    		.catch(error => console.error(error));
+    	}
+
+
+
+<!--	-->
 	function confirmDelete(postId) {
 		if (confirm("정말 삭제하시겠습니까?")) {
 			//url 이동 시키는 기능
@@ -40,22 +110,23 @@
 			<div class = "mb-4">
 				<label class="form-label">첨부파일</label>
 				<ul>
-					<il th:if="${post.fileAttachment}">
+					<li th:if="${post.fileAttachment}">
 						<a th:href="@{/posts/{postId}/download/{fileAttachmentId}
 						(postId=${post.id}, fileAttachmentId=${post.fileAttachment.id})}"
 						th:text ="${post.fileAttachment.originalFilename}"></a>
+					</li>
 				</ul>
 			</div>
 			<div class="card-footer text-muted">
 				<!-- 게시글 작성자, 조회수, 등록일 -->
-				<span>작성자:[[${post.user.name}]]</span> <span>조회 수:
-					[[${post.views}]]</span> <span>작성일:
+				<span>작성자:[[${post.user.name}]]</span>
+				<span>조회 수:
+					[[${post.views}]]</span>
+				<span>작성일:
 					[[${#temporals.format(post.createTime, 'yyyy-MM-dd')}]]</span>
 			</div>
 		</div>
 		<!-- 로그인 사용자와 작성자가 같을 경우에만 수정, 삭제 버튼이 보여야 한다.-->
-		<th: block
-			th:if="${session. loginUser != null and session. loginUser. id == post.user. id}">
 
 
 			<!-- 게시글 삭제 폼 -->
@@ -83,9 +154,24 @@
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
             <button type="submit" class="btn btn-danger">삭제하기</button>  -->
-			</form>
+<!--			</form>-->
 			<!-- 뒤로 가기 버튼 -->
 			<a href="/posts" class="btn btn-secondary mt-3">목록으로 돌아가기</a>
+
+
+        <!--		 댓글 작성-->
+			<form id= "commentForm" th:action="@{/api/posts/{id}/comments(id=${post.id})}">
+			<div class="mb-3">
+				<textarea name="content" class="form-control" rows="3" placeholder="댓글을 입력하세요"></textarea>
+			</div>
+				<button type="submit" class="btn btn-primary">댓글작성</button>
+			</form>
+
+		<!--댓글 표시 영역-->
+		<div class="mb-4">
+			<h4>댓글</h4>
+			<ul id="commentList" class="list-group"></ul>
+		</div>
 	</div>
 
 
